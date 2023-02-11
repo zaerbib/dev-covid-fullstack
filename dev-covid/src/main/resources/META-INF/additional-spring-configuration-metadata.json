@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "entrepo.entry",
+    "type": "java.lang.String",
+    "description": "A description for 'entrepo.entry'"
+  },
+  {
+    "name": "entrepo.data1",
+    "type": "java.lang.String",
+    "description": "A description for 'entrepo.data1'"
+  }
+]}
