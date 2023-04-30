@@ -7,8 +7,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ItemHospitEtabByDepByYear {
+public class ItemHospitEtabByDepByYearByMonth {
     private Integer dep;
     private Integer nb;
     private Integer annee;
+    private Integer month;
 }
