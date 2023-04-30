@@ -25,7 +25,7 @@ public class CovidHospitService {
     }
 
     @TrackTime
-    public Mono<Integer> calculGlobalSurUnAnTotal(Integer annee) {
+    public Mono<Integer> calculHospitGlobalSurUnAnTotal(Integer annee) {
         return Mono.justOrEmpty(covidHospitRepository.totalHospitSurUnAn(annee))
                 .publishOn(Schedulers.boundedElastic())
                 .doOnNext(item -> log.info("Processing ..."))
@@ -33,14 +33,33 @@ public class CovidHospitService {
     }
 
     @TrackTime
-    public Mono<Integer> calculGlobalSurUnMoisTotal(Integer annee, Integer mois) {
+    public Mono<Integer> calculDcGlobalSurUnAnTotal(Integer annee) {
+        return Mono.justOrEmpty(covidHospitRepository.findCovidHospitByAnne(annee))
+                .publishOn(Schedulers.boundedElastic())
+                .map(item -> item.stream().map(CovidHospit::getDc).reduce(0, (subtotal, elt) -> subtotal+elt))
+                .doOnSuccess(item -> log.info("Process end with success ..."))
+                .doOnError(item -> log.info("Process failed ..."));
+    }
+
+    @TrackTime
+    public Mono<Integer> calculHospitGlobalSurUnMoisTotal(Integer annee, Integer mois) {
         return Mono.justOrEmpty(covidHospitRepository.totalHospitSurUnMois(annee, mois))
                 .doOnNext(item -> log.info("Processing ..."))
                 .doOnSuccess(item -> log.info("Procesing end with : {}", item ));
     }
 
     @TrackTime
-    public Mono<Double> moyenneSurUnAn(Integer annee) {
+    public Mono<Integer> calculDcGlobalSurUnMoisTotal(Integer annee, Integer mois) {
+        return Mono.justOrEmpty(covidHospitRepository.findCovidHospitByAnne(annee))
+                .publishOn(Schedulers.boundedElastic())
+                .map(item -> item.stream().filter(it -> it.getJour().getMonthValue() == mois)
+                        .map(CovidHospit::getDc).reduce(0, (subtotal, elt) -> subtotal+elt))
+                .doOnSuccess(item -> log.info("Process End With Success ..."))
+                .doOnError(item -> log.error("Process failed ..."));
+    }
+
+    @TrackTime
+    public Mono<Double> moyenneHospitSurUnAn(Integer annee) {
         return Mono.justOrEmpty(covidHospitRepository.findCovidHospitByAnne(annee))
                 .doOnNext(item -> log.info("Processing ... size {}", item.size()))
                 .map(item -> item.stream().mapToInt(CovidHospit::getHosp)
@@ -49,7 +68,7 @@ public class CovidHospitService {
     }
 
     @TrackTime
-    public Mono<Double> moyenneSurUnmois(Integer annee, Integer mois){
+    public Mono<Double> moyenneHospitSurUnmois(Integer annee, Integer mois){
         return Mono.justOrEmpty(covidHospitRepository.findCovidHospitByAnneAndMois(annee, mois))
                 .doOnNext(item -> log.info("Process ... size : {}", item.size()))
                 .map(item -> item.stream().map(CovidHospit::getHosp)
@@ -60,7 +79,7 @@ public class CovidHospitService {
     }
 
     @TrackTime
-    public Flux<ItemTotalMoisDto> listTotalMoisSurUnAn(Integer annee){
+    public Flux<ItemTotalMoisDto> listTotalHospitMoisSurUnAn(Integer annee){
         return Flux.fromIterable(covidHospitRepository.findCovidHospitByAnne(annee))
                 .publishOn(Schedulers.boundedElastic())
                 .map(item -> ItemHospitDto.builder()
@@ -83,7 +102,7 @@ public class CovidHospitService {
     }
 
     @TrackTime
-    public Flux<ItemMoyenneMoisDto> listMoyenneMoisSurUnAn(Integer annee) {
+    public Flux<ItemMoyenneMoisDto> listMoyenneHospitMoisSurUnAn(Integer annee) {
         return Flux.fromIterable(covidHospitRepository.findCovidHospitByAnne(annee))
                 .publishOn(Schedulers.boundedElastic())
                 .map(item -> ItemHospitDto.builder()

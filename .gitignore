@@ -34,3 +34,6 @@ build/
 /.mvn/
 /mvnw
 /mvnw.cmd
+/dev-covid/src/main/resources/tmp/
+/dev-covid-front/node/
+/dev-covid-front/.angular/

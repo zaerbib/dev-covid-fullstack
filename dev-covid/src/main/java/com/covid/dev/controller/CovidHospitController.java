@@ -22,33 +22,44 @@ public class CovidHospitController {
 
     @GetMapping("total/unan")
     public Mono<Integer> totalHospitSurUnAn(@RequestParam("annee") Integer annee){
-        return covidHospitService.calculGlobalSurUnAnTotal(annee);
+        return covidHospitService.calculHospitGlobalSurUnAnTotal(annee);
+    }
+
+    @GetMapping("total/dc/unan")
+    public Mono<Integer> totalDcSurUnAn(@RequestParam("annee") Integer annee) {
+        return covidHospitService.calculDcGlobalSurUnAnTotal(annee);
     }
 
     @GetMapping("total/mois")
     public Mono<Integer> totalHospitSuUnMois(@RequestParam("annee") Integer annee,
                                              @RequestParam("mois") Integer mois){
-        return covidHospitService.calculGlobalSurUnMoisTotal(annee, mois);
+        return covidHospitService.calculHospitGlobalSurUnMoisTotal(annee, mois);
+    }
+
+    @GetMapping("total/dc/mois")
+    public Mono<Integer> totalDcSurUnMois(@RequestParam("annee") Integer annee,
+                                          @RequestParam("mois") Integer mois) {
+        return covidHospitService.calculDcGlobalSurUnMoisTotal(annee, mois);
     }
 
     @GetMapping("moyenne/unan")
     public Mono<Double> moyennSurUnAn(@RequestParam("annee") Integer annee){
-        return covidHospitService.moyenneSurUnAn(annee);
+        return covidHospitService.moyenneHospitSurUnAn(annee);
     }
 
     @GetMapping("moyenne/mois")
     public Mono<Double> moyenneSurUnMois(@RequestParam("annee") Integer annee,
                                          @RequestParam("mois") Integer mois) {
-        return covidHospitService.moyenneSurUnmois(annee, mois);
+        return covidHospitService.moyenneHospitSurUnmois(annee, mois);
     }
 
     @GetMapping("total/mois/unan")
     public Flux<ItemTotalMoisDto> listTotalMoisSurUnan(@RequestParam("annee") Integer annee){
-        return covidHospitService.listTotalMoisSurUnAn(annee);
+        return covidHospitService.listTotalHospitMoisSurUnAn(annee);
     }
 
     @GetMapping("moyenne/mois/unan")
     public Flux<ItemMoyenneMoisDto> listMoyenneSurUnAn(@RequestParam("annee") Integer annee) {
-        return covidHospitService.listMoyenneMoisSurUnAn(annee);
+        return covidHospitService.listMoyenneHospitMoisSurUnAn(annee);
     }
 }
