@@ -10,18 +10,14 @@ import java.util.List;
 
 public interface CovidHospitEtabRepository extends JpaRepository<CovidHospitEtab, Long> {
 
-    @Query(value="select che.dep, sum(che.nb) as nb from covid_hosp_etab che " +
-            "where date_depart('year', che.jour) =:annee " +
-            "and che.dep in (select che2.dep from covid_hosp_etab che2) " +
-            "group by che.dep " +
-            "order by che.dep", nativeQuery = true)
-    List<ItemHospitEtab> findAllHospitByDepByYear(Integer annee);
+    @Query(value="select * from covid_hosp_etab che " +
+            "where date_part('year', che.jour) =:annee " +
+            "and che.dep in (select che2.dep from covid_hosp_etab che2) ", nativeQuery = true)
+    List<CovidHospitEtab> findAllHospitByDepByYear(Integer annee);
 
-    @Query(value="select che.dep, sum(che.nb) as nb from covid_hosp_etab che " +
-            "where date_depart('year', che.jour) =:annee " +
+    @Query(value="select * from covid_hosp_etab che " +
+            "where date_part('year', che.jour) =:annee " +
             "and date_part('month', che.jour) =:month " +
-            "and che.dep in (select che2.dep from covid_hosp_etab che2) " +
-            "group by che.dep " +
-            "order by che.dep", nativeQuery = true)
-    List<ItemHospitEtab> findAllHospitByDepByYearByMonth(Integer annee, Integer month);
+            "and che.dep in (select che2.dep from covid_hosp_etab che2) ", nativeQuery = true)
+    List<CovidHospitEtab> findAllHospitByDepByYearByMonth(Integer annee, Integer month);
 }
